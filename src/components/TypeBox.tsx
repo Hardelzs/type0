@@ -68,7 +68,7 @@ const TypeBox = () => {
         {sentence.split("").map((char, i) => {
           let color = "text-gray-400";
           if (i < input.length) {
-            color = input[i] === char ? "text-green-500" : "text-red-500";
+            color = input[i] === char ? "text-green-700" : "text-red-500";
           }
           return (
             <span key={i} className={`${color}`}>
