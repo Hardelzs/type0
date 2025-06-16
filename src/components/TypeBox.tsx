@@ -7,7 +7,7 @@ const getRandomSentence = () =>
 const TypeBox = () => {
   const [sentence, setSentence] = useState(getRandomSentence);
   const [input, setInput] = useState("");
-  const [timeLeft, setTimeLeft] = useState(10); // 60 seconds
+  const [timeLeft, setTimeLeft] = useState(10); 
   const [wpm, setWpm] = useState(0);
   const [accuracy, setAccuracy] = useState(0);
   const [started, setStarted] = useState(false);
@@ -95,9 +95,9 @@ const TypeBox = () => {
       />
 
       <div className="flex justify-center gap-8 text-lg">
-        <div>⏱ Time Left: <span className="font-bold">{timeLeft}s</span></div>
-        <div>🏃‍♂️ WPM: <span className="font-bold">{wpm}</span></div>
-        <div>🎯 Accuracy: <span className="font-bold">{accuracy}%</span></div>
+        <div>⏱ Time Left : <span className="font-bold">{timeLeft}s</span></div>
+        <div>🏃‍♂️ WPM : <span className="font-bold">{wpm}</span></div>
+        <div>🎯 Accuracy : <span className="font-bold">{accuracy}%</span></div>
       </div>
 
       <button
