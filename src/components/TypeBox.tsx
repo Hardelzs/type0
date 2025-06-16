@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { sentences } from "../data/Sentences";
 
 const getRandomSentence = () =>
@@ -7,42 +7,104 @@ const getRandomSentence = () =>
 const TypeBox = () => {
   const [sentence, setSentence] = useState(getRandomSentence);
   const [input, setInput] = useState("");
-  const [startTime, setStartTime] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState(10); // 60 seconds
   const [wpm, setWpm] = useState(0);
+  const [accuracy, setAccuracy] = useState(0);
+  const [started, setStarted] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Start the timer
+  useEffect(() => {
+    if (started && timeLeft > 0) {
+      intervalRef.current = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(intervalRef.current!);
+  }, [started]);
+
+  // End typing session
+  useEffect(() => {
+    if (timeLeft === 0 && intervalRef.current) {
+      clearInterval(intervalRef.current);
+      calculateWPMAndAccuracy();
+    }
+  }, [timeLeft]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    if (!startTime) setStartTime(Date.now());
-    setInput(val);
+    if (!started) setStarted(true);
 
-    if (val === sentence) {
-      const endTime = Date.now();
-      const timeTaken = (endTime - startTime!) / 1000 / 60; // in minutes
-      const words = val.split(" ").length;
-      setWpm(Math.round(words / timeTaken));
-    }
+    const val = e.target.value;
+    setInput(val);
+  };
+
+  const calculateWPMAndAccuracy = () => {
+    const wordsTyped = input.trim().split(/\s+/).length;
+    const correctChars = input
+      .split("")
+      .filter((char, i) => char === sentence[i]).length;
+    const totalChars = input.length;
+
+    const acc = totalChars === 0 ? 0 : Math.round((correctChars / totalChars) * 100);
+    setAccuracy(acc);
+
+    const wpmValue = Math.round(wordsTyped * (60 / 60)); // words per 60 secs
+    setWpm(wpmValue);
   };
 
   const resetGame = () => {
     setSentence(getRandomSentence());
     setInput("");
-    setStartTime(null);
+    setTimeLeft(10);
     setWpm(0);
+    setAccuracy(0);
+    setStarted(false);
+    clearInterval(intervalRef.current!);
+  };
+
+  const renderHighlightedText = () => {
+    return (
+      <p className="text-xl font-mono break-words max-w-3xl mx-auto">
+        {sentence.split("").map((char, i) => {
+          let color = "text-gray-400";
+          if (i < input.length) {
+            color = input[i] === char ? "text-green-500" : "text-red-500";
+          }
+          return (
+            <span key={i} className={`${color}`}>
+              {char}
+            </span>
+          );
+        })}
+      </p>
+    );
   };
 
   return (
-    <div className="text-center space-y-4">
-      <h2 className="text-xl font-medium">{sentence}</h2>
+    <div className="space-y-6 text-center px-4 py-10">
+      <h1 className="text-2xl font-bold">⌨️ Typing Speed Test</h1>
+
+      <div>{renderHighlightedText()}</div>
+
       <input
-        type="text"
         value={input}
         onChange={handleInputChange}
-        className="border p-2 w-full max-w-md"
+        disabled={timeLeft === 0}
+        className="border border-gray-400 p-3 w-full max-w-2xl text-xl rounded-md outline-none"
         placeholder="Start typing..."
       />
-      <div>WPM: {wpm}</div>
-      <button onClick={resetGame} className="bg-blue-500 text-white px-4 py-2 rounded">
-        Restart
+
+      <div className="flex justify-center gap-8 text-lg">
+        <div>⏱ Time Left: <span className="font-bold">{timeLeft}s</span></div>
+        <div>🏃‍♂️ WPM: <span className="font-bold">{wpm}</span></div>
+        <div>🎯 Accuracy: <span className="font-bold">{accuracy}%</span></div>
+      </div>
+
+      <button
+        onClick={resetGame}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+      >
+        🔄 Restart
       </button>
     </div>
   );
