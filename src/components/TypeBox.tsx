@@ -4,6 +4,10 @@ import { sentences } from "../data/Sentences";
 const getRandomSentence = () =>
   sentences[Math.floor(Math.random() * sentences.length)];
 
+const typeSound = new Audio("/sounds/type.mp3")
+const sucessSound = new Audio("/sounds/success.mp3")
+const errorSound = new Audio("/sounds/error.mp3")
+
 const TypeBox = () => {
   const [sentence, setSentence] = useState(getRandomSentence);
   const [input, setInput] = useState("");
@@ -35,22 +39,30 @@ const TypeBox = () => {
     if (!started) setStarted(true);
 
     const val = e.target.value;
+    typeSound.currentTime = 0
+    typeSound.play();
     setInput(val);
   };
 
-  const calculateWPMAndAccuracy = () => {
-    const wordsTyped = input.trim().split(/\s+/).length;
-    const correctChars = input
-      .split("")
-      .filter((char, i) => char === sentence[i]).length;
-    const totalChars = input.length;
+const calculateWPMAndAccuracy = () => {
+  const wordsTyped = input.trim().split(/\s+/).length;
+  const correctChars = input
+    .split("")
+    .filter((char, i) => char === sentence[i]).length;
+  const totalChars = input.length;
 
-    const acc = totalChars === 0 ? 0 : Math.round((correctChars / totalChars) * 100);
-    setAccuracy(acc);
+  const acc = totalChars === 0 ? 0 : Math.round((correctChars / totalChars) * 100);
+  setAccuracy(acc);
 
-    const wpmValue = Math.round(wordsTyped * (60 / 60)); // words per 60 secs
-    setWpm(wpmValue);
-  };
+  const wpmValue = Math.round(wordsTyped);
+  setWpm(wpmValue);
+
+  if (acc > 50) {
+    sucessSound.play();
+  } else {
+    errorSound.play();
+  }
+};
 
   const resetGame = () => {
     setSentence(getRandomSentence());
