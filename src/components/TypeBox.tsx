@@ -44,7 +44,7 @@ const TypeBox = () => {
     if (val === sentence) {
       calculateWPMAndAccuracy()
       clearInterval(intervalRef.current!);
-      setShowButton(true)
+      // setShowButton(true)
     }
   };
 
@@ -94,6 +94,7 @@ const TypeBox = () => {
   };
 
   const renderHighlightedText = () => {
+    const iscompleted = input.length === sentence.length && input === sentence
   return (
     <p className="text-xl font-mono break-words max-w-3xl mx-auto">
       {sentence.split("").map((char, i) => {
@@ -101,6 +102,7 @@ const TypeBox = () => {
         if (i < input.length) {
           color = input[i] === char ? "text-blue-700" : "text-red-500";
         }
+        if(iscompleted) color = "text-green-600"
         return (
           <span key={i} className={`${color}`}>
             {char}
