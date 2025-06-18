@@ -4,14 +4,14 @@ import { sentences } from "../data/Sentences";
 const getRandomSentence = () =>
   sentences[Math.floor(Math.random() * sentences.length)];
 
-const typeSound = new Audio("/sounds/type.mp3")
-const sucessSound = new Audio("/sounds/success.mp3")
-const errorSound = new Audio("/sounds/error.mp3")
+const typeSound = new Audio("/sounds/type.mp3");
+const sucessSound = new Audio("/sounds/success.mp3");
+const errorSound = new Audio("/sounds/error.mp3");
 
 const TypeBox = () => {
   const [sentence, setSentence] = useState(getRandomSentence);
   const [input, setInput] = useState("");
-  const [timeLeft, setTimeLeft] = useState(10); 
+  const [timeLeft, setTimeLeft] = useState(10);
   const [wpm, setWpm] = useState(0);
   const [accuracy, setAccuracy] = useState(0);
   const [started, setStarted] = useState(false);
@@ -39,39 +39,53 @@ const TypeBox = () => {
     if (!started) setStarted(true);
 
     const val = e.target.value;
-    typeSound.currentTime = 0
+    typeSound.currentTime = 0;
     typeSound.play();
     setInput(val);
   };
 
-const calculateWPMAndAccuracy = () => {
-  const wordsTyped = input.trim().split(/\s+/).length;
-  const correctChars = input
-    .split("")
-    .filter((char, i) => char === sentence[i]).length;
-  const totalChars = input.length;
+  const calculateWPMAndAccuracy = () => {
+    const wordsTyped = input.trim().split(/\s+/).length;
+    const correctChars = input
+      .split("")
+      .filter((char, i) => char === sentence[i]).length;
+    const totalChars = input.length;
 
-  const acc = totalChars === 0 ? 0 : Math.round((correctChars / totalChars) * 100);
-  setAccuracy(acc);
+    const acc =
+      totalChars === 0 ? 0 : Math.round((correctChars / totalChars) * 100);
+    setAccuracy(acc);
 
-  const wpmValue = Math.round(wordsTyped);
-  setWpm(wpmValue);
+    const wpmValue = Math.round(wordsTyped);
+    setWpm(wpmValue);
 
-  if (acc > 50) {
-    sucessSound.play();
-  } else {
-    errorSound.play();
-  }
-};
+    if (acc === 100) {
+      sucessSound.play();
+    } else {
+      errorSound.play();
+    }
+  };
 
   const resetGame = () => {
-    setSentence(getRandomSentence());
     setInput("");
     setTimeLeft(10);
     setWpm(0);
     setAccuracy(0);
     setStarted(false);
     clearInterval(intervalRef.current!);
+  };
+
+  const finishGame = () => {
+    if (accuracy > 50) {
+      sucessSound.play();
+    }
+      setSentence(getRandomSentence());
+      setInput("");
+      setTimeLeft(10);
+      setWpm(0);
+      setAccuracy(0);
+      setStarted(false);
+      clearInterval(intervalRef.current!);
+    
   };
 
   const renderHighlightedText = () => {
@@ -107,17 +121,26 @@ const calculateWPMAndAccuracy = () => {
       />
 
       <div className="flex justify-center gap-8 text-lg">
-        <div>⏱ Time Left : <span className="font-bold">{timeLeft}s</span></div>
-        <div>🏃‍♂️ WPM : <span className="font-bold">{wpm}</span></div>
-        <div>🎯 Accuracy : <span className="font-bold">{accuracy}%</span></div>
+        <div>
+          ⏱ Time Left : <span className="font-bold">{timeLeft}s</span>
+        </div>
+        <div>
+          🏃‍♂️ WPM : <span className="font-bold">{wpm}</span>
+        </div>
+        <div>
+          🎯 Accuracy : <span className="font-bold">{accuracy}%</span>
+        </div>
       </div>
 
-      <button
-        onClick={resetGame}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-      >
-        🔄 Restart
-      </button>
+      <div className="flex justify-center gap-4 mt-6 ">
+        <button
+          onClick={resetGame}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+        >
+          🔄 Restart
+        </button>
+        <button onClick={finishGame}>✅ Done</button>
+      </div>
     </div>
   );
 };
