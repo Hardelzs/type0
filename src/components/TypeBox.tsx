@@ -4,7 +4,7 @@ import { sentences } from "../data/Sentences";
 const getRandomSentence = () =>
   sentences[Math.floor(Math.random() * sentences.length)];
 
-const typeSound = new Audio("/sounds/type.mp3");
+// const typeSound = new Audio("/sounds/type.mp3");
 const sucessSound = new Audio("/sounds/success.mp3");
 const errorSound = new Audio("/sounds/error.mp3");
 
@@ -16,6 +16,7 @@ const TypeBox = () => {
   const [accuracy, setAccuracy] = useState(0);
   const [started, setStarted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [showbutton, setShowButton] = useState(false)
 
   // Start the timer
   useEffect(() => {
@@ -24,6 +25,7 @@ const TypeBox = () => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
     }
+    setShowButton(true)
     return () => clearInterval(intervalRef.current!);
   }, [started]);
 
@@ -37,10 +39,7 @@ const TypeBox = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!started) setStarted(true);
-
     const val = e.target.value;
-    typeSound.currentTime = 0;
-    typeSound.play();
     setInput(val);
   };
 
@@ -89,12 +88,25 @@ const TypeBox = () => {
   };
 
   const renderHighlightedText = () => {
+    if(input.length === sentence.length && timeLeft > 0) {
+      return (
+        setShowButton(true),
+        <p className="text-xl font-mono break-words max-w-3xl mx-auto">
+          {sentence.split("").map((char, i) => (
+            <span key={i} className="text-green-900">
+              {char}
+            </span>
+          ))}
+        </p>
+      
+      );
+    }
     return (
       <p className="text-xl font-mono break-words max-w-3xl mx-auto">
         {sentence.split("").map((char, i) => {
           let color = "text-gray-400";
           if (i < input.length) {
-            color = input[i] === char ? "text-green-700" : "text-red-500";
+            color = input[i] === char ? "text-blue-700" : "text-red-500";
           }
           return (
             <span key={i} className={`${color}`}>
@@ -139,7 +151,17 @@ const TypeBox = () => {
         >
           🔄 Restart
         </button>
-        <button onClick={finishGame}>✅ Done</button>
+
+        {showbutton && (
+          <button
+            onClick={finishGame}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
+          >
+            ✅ Finish
+          </button>
+        )}
+
+        
       </div>
     </div>
   );
