@@ -25,7 +25,7 @@ const TypeBox = () => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
     }
-    setShowButton(true)
+
     return () => clearInterval(intervalRef.current!);
   }, [started]);
 
@@ -41,6 +41,11 @@ const TypeBox = () => {
     if (!started) setStarted(true);
     const val = e.target.value;
     setInput(val);
+    if (val === sentence) {
+      calculateWPMAndAccuracy()
+      clearInterval(intervalRef.current!);
+      setShowButton(true)
+    }
   };
 
   const calculateWPMAndAccuracy = () => {
@@ -57,6 +62,7 @@ const TypeBox = () => {
     const wpmValue = Math.round(wordsTyped);
     setWpm(wpmValue);
 
+        setShowButton(true)
     if (acc === 100) {
       sucessSound.play();
     } else {
@@ -88,35 +94,23 @@ const TypeBox = () => {
   };
 
   const renderHighlightedText = () => {
-    if(input.length === sentence.length && timeLeft > 0) {
-      return (
-        setShowButton(true),
-        <p className="text-xl font-mono break-words max-w-3xl mx-auto">
-          {sentence.split("").map((char, i) => (
-            <span key={i} className="text-green-900">
-              {char}
-            </span>
-          ))}
-        </p>
-      
-      );
-    }
-    return (
-      <p className="text-xl font-mono break-words max-w-3xl mx-auto">
-        {sentence.split("").map((char, i) => {
-          let color = "text-gray-400";
-          if (i < input.length) {
-            color = input[i] === char ? "text-blue-700" : "text-red-500";
-          }
-          return (
-            <span key={i} className={`${color}`}>
-              {char}
-            </span>
-          );
-        })}
-      </p>
-    );
-  };
+  return (
+    <p className="text-xl font-mono break-words max-w-3xl mx-auto">
+      {sentence.split("").map((char, i) => {
+        let color = "text-gray-400";
+        if (i < input.length) {
+          color = input[i] === char ? "text-blue-700" : "text-red-500";
+        }
+        return (
+          <span key={i} className={`${color}`}>
+            {char}
+          </span>
+        );
+      })}
+    </p>
+  );
+};
+
 
   return (
     <div className="space-y-6 text-center px-4 py-10">
