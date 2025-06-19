@@ -29,18 +29,20 @@ const TypeBox = () => {
     }
 
     return () => clearInterval(intervalRef.current!);
-  }, [started]);
+  }, [started, timeLeft]);
 
   useEffect(() => {
     if (timeLeft === 0 && intervalRef.current) {
       clearInterval(intervalRef.current);
       calculateWPMAndAccuracy();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft]);
 
   useEffect(() => {
     setSentence(getRandomSentence(difficulty));
   }, [difficulty]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!started) setStarted(true);
     const val = e.target.value;
