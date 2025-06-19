@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, use } from "react";
+import { useEffect, useState, useRef } from "react";
 import { sentences } from "../data/Sentences";
 
 const getRandomSentence = (level: "easy" | "medium" | "hard") =>
@@ -9,7 +9,7 @@ const sucessSound = new Audio("/sounds/success.mp3");
 const errorSound = new Audio("/sounds/error.mp3");
 
 const TypeBox = () => {
-  const [sentence, setSentence] = useState(getRandomSentence());
+  const [sentence, setSentence] = useState(getRandomSentence("easy"));
   const [input, setInput] = useState("");
   const [timeLeft, setTimeLeft] = useState(10);
   const [wpm, setWpm] = useState(0);
@@ -162,6 +162,25 @@ const TypeBox = () => {
             ✅ Finish
           </button>
         )}
+      </div>
+
+      <div className="flex justify-center space-x-4 mb-4">
+        {["easy", "medium", "hard"].map((level) => (
+          <button
+            key={level}
+            onClick={() => {
+              setDifficulty(level as "easy" | "medium" | "hard");
+              resetGame();
+            }}
+            className={`px-4 py-2 rounded ${
+              difficulty === level
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-black"
+            }`}
+          >
+            {level.toUpperCase()}
+          </button>
+        ))}
       </div>
     </div>
   );
