@@ -52,7 +52,7 @@ export const preLoaderAnim = (): void => {
     .to(
       ".preloader",
       {
-        duration: 1.5,
+        duration: 2,
         height: "0vh",
         ease: "Power3.easeOut",
         onComplete: mobileLanding,
@@ -324,3 +324,4 @@ export const fadeOut = (el: string | Element): void => {
     ease: "power4.out",
   });
 };
+
