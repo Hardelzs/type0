@@ -120,6 +120,7 @@ const TypeBox = () => {
   };
 
   return (
+  
     <div className="space-y-6 text-center px-4 py-10">
       <h1 className="text-2xl font-bold">⌨️ Typing Speed Test</h1>
 

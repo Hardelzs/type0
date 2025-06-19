@@ -1,4 +1,5 @@
 
+import PreLoader from './components/Preloader';
 import TypeBox from './components/TypeBox';
 import './index.css'; // Ensure this is the correct path to your Tailwind CSS file
 
@@ -7,6 +8,7 @@ import './index.css'; // Ensure this is the correct path to your Tailwind CSS fi
 const App = () => {
   return (
     <div>
+      <PreLoader />
       <TypeBox />
     </div>
   )
