@@ -77,6 +77,7 @@ const TypeBox = () => {
     setAccuracy(0);
     setStarted(false);
     clearInterval(intervalRef.current!);
+    setShowButton(false)
   };
 
   const finishGame = () => {
@@ -90,7 +91,7 @@ const TypeBox = () => {
       setAccuracy(0);
       setStarted(false);
       clearInterval(intervalRef.current!);
-    
+    setShowButton(false)
   };
 
   const renderHighlightedText = () => {
