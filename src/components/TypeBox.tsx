@@ -9,7 +9,6 @@ const sucessSound = new Audio("/sounds/success.mp3");
 const errorSound = new Audio("/sounds/error.mp3");
 
 const TypeBox = () => {
-  const [sentence, setSentence] = useState(getRandomSentence("easy"));
   const [input, setInput] = useState("");
   const [timeLeft, setTimeLeft] = useState(10);
   const [wpm, setWpm] = useState(0);
@@ -20,7 +19,7 @@ const TypeBox = () => {
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
     "easy"
   );
-
+  const [sentence, setSentence] = useState(getRandomSentence(difficulty));
 
   useEffect(() => {
     if (started && timeLeft > 0) {
@@ -32,7 +31,6 @@ const TypeBox = () => {
     return () => clearInterval(intervalRef.current!);
   }, [started]);
 
-
   useEffect(() => {
     if (timeLeft === 0 && intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -42,7 +40,7 @@ const TypeBox = () => {
 
   useEffect(() => {
     setSentence(getRandomSentence(difficulty));
-  });
+  }, [difficulty]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!started) setStarted(true);
     const val = e.target.value;
