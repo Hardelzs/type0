@@ -1,22 +1,25 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, use } from "react";
 import { sentences } from "../data/Sentences";
 
-const getRandomSentence = () =>
-  sentences[Math.floor(Math.random() * sentences.length)];
+const getRandomSentence = (level: "easy" | "medium" | "hard") =>
+  sentences[level][Math.floor(Math.random() * sentences[level].length)];
 
 // const typeSound = new Audio("/sounds/type.mp3");
 const sucessSound = new Audio("/sounds/success.mp3");
 const errorSound = new Audio("/sounds/error.mp3");
 
 const TypeBox = () => {
-  const [sentence, setSentence] = useState(getRandomSentence);
+  const [sentence, setSentence] = useState(getRandomSentence());
   const [input, setInput] = useState("");
   const [timeLeft, setTimeLeft] = useState(10);
   const [wpm, setWpm] = useState(0);
   const [accuracy, setAccuracy] = useState(0);
   const [started, setStarted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [showbutton, setShowButton] = useState(false)
+  const [showbutton, setShowButton] = useState(false);
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
+    "easy"
+  );
 
   // Start the timer
   useEffect(() => {
@@ -37,12 +40,15 @@ const TypeBox = () => {
     }
   }, [timeLeft]);
 
+  useEffect(() => {
+    setSentence(getRandomSentence(difficulty));
+  });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!started) setStarted(true);
     const val = e.target.value;
     setInput(val);
     if (val === sentence) {
-      calculateWPMAndAccuracy()
+      calculateWPMAndAccuracy();
       clearInterval(intervalRef.current!);
       // setShowButton(true)
     }
@@ -62,7 +68,7 @@ const TypeBox = () => {
     const wpmValue = Math.round(wordsTyped);
     setWpm(wpmValue);
 
-        setShowButton(true)
+    setShowButton(true);
     if (acc === 100) {
       sucessSound.play();
     } else {
@@ -77,43 +83,42 @@ const TypeBox = () => {
     setAccuracy(0);
     setStarted(false);
     clearInterval(intervalRef.current!);
-    setShowButton(false)
+    setShowButton(false);
   };
 
   const finishGame = () => {
     if (accuracy > 50) {
       sucessSound.play();
     }
-      setSentence(getRandomSentence());
-      setInput("");
-      setTimeLeft(10);
-      setWpm(0);
-      setAccuracy(0);
-      setStarted(false);
-      clearInterval(intervalRef.current!);
-    setShowButton(false)
+    setSentence(getRandomSentence(difficulty));
+    setInput("");
+    setTimeLeft(10);
+    setWpm(0);
+    setAccuracy(0);
+    setStarted(false);
+    clearInterval(intervalRef.current!);
+    setShowButton(false);
   };
 
   const renderHighlightedText = () => {
-    const iscompleted = input.length === sentence.length && input === sentence
-  return (
-    <p className="text-xl font-mono break-words max-w-3xl mx-auto">
-      {sentence.split("").map((char, i) => {
-        let color = "text-gray-400";
-        if (i < input.length) {
-          color = input[i] === char ? "text-blue-700" : "text-red-500";
-        }
-        if(iscompleted) color = "text-green-600"
-        return (
-          <span key={i} className={`${color}`}>
-            {char}
-          </span>
-        );
-      })}
-    </p>
-  );
-};
-
+    const iscompleted = input.length === sentence.length && input === sentence;
+    return (
+      <p className="text-xl font-mono break-words max-w-3xl mx-auto">
+        {sentence.split("").map((char, i) => {
+          let color = "text-gray-400";
+          if (i < input.length) {
+            color = input[i] === char ? "text-blue-700" : "text-red-500";
+          }
+          if (iscompleted) color = "text-green-600";
+          return (
+            <span key={i} className={`${color}`}>
+              {char}
+            </span>
+          );
+        })}
+      </p>
+    );
+  };
 
   return (
     <div className="space-y-6 text-center px-4 py-10">
@@ -157,8 +162,6 @@ const TypeBox = () => {
             ✅ Finish
           </button>
         )}
-
-        
       </div>
     </div>
   );
