@@ -21,7 +21,7 @@ const TypeBox = () => {
     "easy"
   );
 
-  // Start the timer
+
   useEffect(() => {
     if (started && timeLeft > 0) {
       intervalRef.current = setInterval(() => {
@@ -32,7 +32,7 @@ const TypeBox = () => {
     return () => clearInterval(intervalRef.current!);
   }, [started]);
 
-  // End typing session
+
   useEffect(() => {
     if (timeLeft === 0 && intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -50,7 +50,6 @@ const TypeBox = () => {
     if (val === sentence) {
       calculateWPMAndAccuracy();
       clearInterval(intervalRef.current!);
-      // setShowButton(true)
     }
   };
 
