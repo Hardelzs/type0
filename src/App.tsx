@@ -1,5 +1,5 @@
 
-import PreLoader from './components/Preloader';
+import PreLoader from './components/PreLoader';
 import TypeBox from './components/TypeBox';
 import './index.css'; // Ensure this is the correct path to your Tailwind CSS file
 
