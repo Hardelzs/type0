@@ -7,6 +7,7 @@ const getRandomSentence = (level: "easy" | "medium" | "hard") =>
 // const typeSound = new Audio("/sounds/type.mp3");
 const sucessSound = new Audio("/sounds/success.mp3");
 const errorSound = new Audio("/sounds/error.mp3");
+const finishSound = new Audio("/sounds/finish.mp3");
 
 const TypeBox = () => {
   const [input, setInput] = useState("");
@@ -69,7 +70,7 @@ const TypeBox = () => {
 
     setShowButton(true);
     if (acc === 100) {
-      sucessSound.play();
+      finishSound.play();
     } else {
       errorSound.play();
     }
