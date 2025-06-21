@@ -25,3 +25,10 @@
     overflow: hidden;
     color: #fff;
 }
+.preloader-image {
+  max-width: 120px;
+  margin: 0 auto;
+  display: block;
+  opacity: 0;
+}
+

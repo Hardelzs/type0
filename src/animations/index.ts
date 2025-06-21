@@ -34,6 +34,28 @@ export const preLoaderAnim = (): void => {
       stagger: 0.2,
       ease: "Power3.easeOut",
     })
+
+    // 👇 Fade in the image AFTER the texts
+    .fromTo(
+      ".preloader-image",
+      { opacity: 0, y: 40 },
+      {
+        duration: 1,
+        opacity: 1,
+        y: 0,
+        ease: "power2.out",
+      }
+    )
+
+    // 👇 Keep image on screen for a bit
+    .to(".preloader-image", {
+      duration: 1,
+      delay: 1.2,
+      opacity: 0,
+      y: -20,
+      ease: "power2.inOut",
+    })
+
     .to(".landing", {
       duration: 0.05,
       css: { overflowY: "hidden", height: "unset" },
@@ -324,4 +346,3 @@ export const fadeOut = (el: string | Element): void => {
     ease: "power4.out",
   });
 };
-
