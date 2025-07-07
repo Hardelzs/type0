@@ -150,7 +150,7 @@ const TypeBox = () => {
       <div className="flex justify-center gap-4 mt-6 ">
         <button
           onClick={resetGame}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+          className="bg-red-400 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
         >
           🔄 Restart
         </button>
@@ -173,7 +173,7 @@ const TypeBox = () => {
               setDifficulty(level as "easy" | "medium" | "hard");
               resetGame();
             }}
-            className={`px-4 py-2 rounded-full ${
+            className={`px-4 py-2 rounded ${
               difficulty === level
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 text-black"
